@@ -132,3 +132,6 @@ class ArtificialBasis(SimplexTable):
         if self.is_first_stage:
             column = self.resize(row, column)
         self.recalculate(row, column)
+
+    def get_data(self):
+        return self.table, self.rows_caption, self.columns_caption, self.is_maximize
