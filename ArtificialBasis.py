@@ -4,7 +4,7 @@ from SimplexTable import SimplexTable
 
 
 class ArtificialBasis(SimplexTable):
-    def __init__(self, matrix_a: list, matrix_b: list, matrix_c: list, signs: list, is_maximize: bool):
+    def __init__(self, matrix_a: list, matrix_b: list, matrix_c: list, signs: list, is_maximize: bool, basis='x'):
         self.is_maximize = is_maximize
         self.is_first_stage = True
         table = []
@@ -54,7 +54,7 @@ class ArtificialBasis(SimplexTable):
         columns = len(table[0])
         columns_caption = []
         for i in range(columns - 1):
-            columns_caption.append('x' + str(i + 1))
+            columns_caption.append(basis + str(i + 1))
         columns_caption.append('b')
         rows_caption = []
         for i in range(rows - 2):

@@ -92,6 +92,40 @@ while True:
     else:
         is_maximize = False
     break
+print('Your enter:')
+for i in range(equations_count):
+    for j in range(variables_count):
+        if j == 0 or matrix_a[i][j] < 0:
+            if matrix_a[i][j] == -1:
+                print('-x{}'.format(j + 1), end='')
+            elif matrix_a[i][j] == 1:
+                print('x{}'.format(j + 1), end='')
+            else:
+                print('{}x{}'.format(matrix_a[i][j], j + 1), end='')
+        else:
+            if matrix_a[i][j] == 1:
+                print('+x{}'.format(j + 1), end='')
+            else:
+                print('+{}x{}'.format(matrix_a[i][j], j + 1), end='')
+    print('{}{}'.format(signs[i], matrix_b[i]))
+print('Z(x)=', end='')
+for i in range(variables_count):
+    if i == 0 or matrix_c[i] < 0:
+        if matrix_c[i] == -1:
+            print('-x{}'.format(i + 1), end='')
+        elif matrix_c[i] == 1:
+            print('x{}'.format(i + 1), end='')
+        else:
+            print('{}x{}'.format(matrix_c[i], i + 1), end='')
+    else:
+        if matrix_c[i] == 1:
+            print('+x{}'.format(i + 1), end='')
+        else:
+            print('+{}x{}'.format(matrix_c[i], i + 1), end='')
+if is_maximize:
+    print(' -> max')
+else:
+    print(' -> min')
 for i in range(equations_count):
     if matrix_b[i] < 0:
         for j in range(variables_count):
