@@ -85,7 +85,7 @@ class App:
                 print('Too many arguments')
                 continue
             try:
-                for i in range(self.variables_count):
+                for i in range(self.variables_count + 1):
                     c = int(equation[i])
                     self.matrix_c.append(c)
             except ValueError:
