@@ -37,16 +37,17 @@ class Gomori(SimplexTable):
         return index
 
     @private
-    def print_new_equation(self, q: list):
-        print('Added new equation: {}'.format(-q[len(q) - 1]), end='')
+    def new_equation(self, q: list):
+        equation = 'Added new equation: {}'.format(-q[len(q) - 1])
         for i in range(len(q) - 1):
             if q[i] == -1:
-                print('-x{}'.format(i + 1), end='')
+                equation += '-x{}'.format(i + 1)
             elif q[i] == 0:
                 continue
             else:
-                print('{}x{}'.format(q[i], i + 1), end='')
-        print('<=0')
+                equation += '{}x{}'.format(q[i], i + 1)
+        equation += '<=0'
+        return equation
 
     @private
     def add_basis(self, index_from: int):
@@ -55,7 +56,6 @@ class Gomori(SimplexTable):
             element = self.table[index_from][i]
             q = element - math.floor(element)
             row.append(-q)
-        self.print_new_equation(row)
         self.table.insert(self.rows - 1, row.copy())
         new_basis_index = Gomori.get_basis_index(self.columns_caption[self.columns - 2]) + 1
         self.rows_caption.insert(self.rows - 1, 'x' + str(new_basis_index))
@@ -67,6 +67,7 @@ class Gomori(SimplexTable):
                 self.table[i].insert(self.columns - 1, Fraction(0))
         self.columns_caption.insert(self.columns - 1, 'x' + str(new_basis_index))
         self.columns += 1
+        return self.new_equation(row)
 
     @private
     def find_column(self):
@@ -82,13 +83,15 @@ class Gomori(SimplexTable):
                 index = i
         return index
 
-    def iterate(self):
+    def iterate_first(self):
         row = self.find_row()
-        self.add_basis(row)
-        self.print()
+        return self.add_basis(row)
+
+    def iterate_last(self):
         column = self.find_column()
-        print('Element: {} ({}, {})'.format(str(self.table[self.rows - 2][column]), self.rows - 1, column + 1))
+        element = 'Element: {} ({}, {})'.format(str(self.table[self.rows - 2][column]), self.rows - 1, column + 1)
         self.recalculate(self.rows - 2, column)
+        return element
 
     def get_function_answer(self):
         return -self.table[self.rows - 1][self.columns - 1]

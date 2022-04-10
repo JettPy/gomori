@@ -21,31 +21,31 @@ class ArtificialBasis(SimplexTable):
             if signs[i] == '>=':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(-1))
+                        table[j].insert(pos, -1)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                         artificial_basis_indexes.append(pos)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             elif signs[i] == '==':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                         artificial_basis_indexes.append(pos)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             elif signs[i] == '<=':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             else:
                 raise Exception("Invalid sign")
@@ -128,10 +128,11 @@ class ArtificialBasis(SimplexTable):
     def iterate(self):
         column = self.find_column()
         row = self.find_row(column)
-        print('Element: {} ({}, {})'.format(str(self.table[row][column]), row + 1, column + 1))
+        element = 'Element: {} ({}, {})'.format(str(self.table[row][column]), row + 1, column + 1)
         if self.is_first_stage:
             column = self.resize(row, column)
         self.recalculate(row, column)
+        return element
 
     def get_data(self):
         return self.table, self.rows_caption, self.columns_caption, self.is_maximize
