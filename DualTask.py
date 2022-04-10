@@ -2,7 +2,7 @@ from ArtificialBasis import ArtificialBasis
 
 
 class DualTask:
-    def __init__(self, matrix_a: list, matrix_b: list, matrix_c: list, is_maximize: bool):
+    def __init__(self, matrix_a: list, matrix_b: list, matrix_c: list, is_maximize: bool, is_to_console=True):
         matrix_a_t = []
         for i in range(len(matrix_a[0])):
             row_a = []
@@ -19,7 +19,10 @@ class DualTask:
                 dual_signs.append('<=')
             else:
                 dual_signs.append('>=')
-        self.print_dual_system(matrix_a_t, matrix_b_t, matrix_c_t, dual_signs, dual_is_maximize)
+        if is_to_console:
+            self.print_dual_system(matrix_a_t, matrix_b_t, matrix_c_t, dual_signs, dual_is_maximize)
+        else:
+            self.print_dual_system_to_file(matrix_a_t, matrix_b_t, matrix_c_t, dual_signs, dual_is_maximize)
         for i in range(len(matrix_b_t)):
             if matrix_b_t[i] < 0:
                 for j in range(len(matrix_c_t)):
@@ -68,8 +71,47 @@ class DualTask:
         else:
             print(' -> min')
 
+    @staticmethod
+    def print_dual_system_to_file(matrix_a: list, matrix_b: list, matrix_c: list, signs: list, is_maximize: bool):
+        file = open('answer.txt', 'a')
+        file.write('Dual system:\n')
+        for i in range(len(matrix_a)):
+            for j in range(len(matrix_b)):
+                if j == 0 or matrix_a[i][j] < 0:
+                    if matrix_a[i][j] == -1:
+                        file.write('-y{}'.format(j + 1))
+                    elif matrix_a[i][j] == 1:
+                        file.write('y{}'.format(j + 1))
+                    else:
+                        file.write('{}y{}'.format(matrix_a[i][j], j + 1))
+                else:
+                    if matrix_a[i][j] == 1:
+                        file.write('+y{}'.format(j + 1))
+                    else:
+                        file.write('+{}y{}'.format(matrix_a[i][j], j + 1))
+            file.write('{}{}\n'.format(signs[i], matrix_b[i]))
+        file.write('Z(y)=')
+        for i in range(len(matrix_b)):
+            if i == 0 or matrix_c[i] < 0:
+                if matrix_c[i] == -1:
+                    file.write('-y{}'.format(i + 1))
+                elif matrix_c[i] == 1:
+                    file.write('y{}'.format(i + 1))
+                else:
+                    file.write('{}y{}'.format(matrix_c[i], i + 1))
+            else:
+                if matrix_c[i] == 1:
+                    file.write('+y{}'.format(i + 1))
+                else:
+                    file.write('+{}y{}'.format(matrix_c[i], i + 1))
+        if is_maximize:
+            file.write(' -> max\n')
+        else:
+            file.write(' -> min\n')
+        file.close()
+
     def iterate(self):
-        self.table.iterate()
+        return self.table.iterate()
 
     def print(self):
         self.table.print()
@@ -85,3 +127,6 @@ class DualTask:
 
     def get_function_answer(self):
         return self.table.get_function_answer()
+
+    def get_table_to_print(self):
+        return self.table.get_table_to_print()

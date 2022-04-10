@@ -25,13 +25,13 @@ class SimplexTable(ABC):
                 elif i != row and j == column:
                     new_table[i][j] = Fraction(0)
                 elif i == row and j != column:
-                    new_table[i][j] = Fraction(self.table[i][j] / self.table[row][column])
+                    new_table[i][j] = Fraction(self.table[i][j] / self.table[row][column]).limit_denominator(max_denominator=1000)
                 else:
                     a11 = self.table[i][j]
                     a12 = self.table[row][j]
                     a21 = self.table[i][column]
                     a22 = self.table[row][column]
-                    new_table[i][j] = Fraction(a11 - a12 * a21 / a22)
+                    new_table[i][j] = Fraction(a11 - a12 * a21 / a22).limit_denominator(max_denominator=1000)
         self.table = new_table
 
     @abstractmethod
@@ -51,6 +51,20 @@ class SimplexTable(ABC):
             for element in self.table[i]:
                 print('{:>6}'.format(str(element)), end=' ')
             print()
+
+    def get_table_to_print(self):
+        table = []
+        row_in_table = []
+        for caption in ([''] + self.columns_caption):
+            row_in_table.append(caption)
+        table.append(row_in_table.copy())
+        for i in range(self.rows):
+            row_in_table.clear()
+            row_in_table.append(self.rows_caption[i])
+            for element in self.table[i]:
+                row_in_table.append(str(element))
+            table.append(row_in_table.copy())
+        return table
 
     def get_function_answer(self):
         return self.table[self.rows - 1][self.columns - 1]

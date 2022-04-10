@@ -49,13 +49,30 @@ class Gomori(SimplexTable):
         print('<=0')
 
     @private
-    def add_basis(self, index_from: int):
+    def print_new_equation_to_file(self, q: list):
+        file = open('answer.txt', 'a')
+        file.write('Added new equation: {}'.format(-q[len(q) - 1]))
+        for i in range(len(q) - 1):
+            if q[i] == -1:
+                file.write('-x{}'.format(i + 1))
+            elif q[i] == 0:
+                continue
+            else:
+                file.write('{}x{}'.format(q[i], i + 1))
+        file.write('<=0\n')
+        file.close()
+
+    @private
+    def add_basis(self, index_from: int, is_to_console=True):
         row = []
         for i in range(self.columns):
             element = self.table[index_from][i]
             q = element - math.floor(element)
             row.append(-q)
-        self.print_new_equation(row)
+        if is_to_console:
+            self.print_new_equation(row)
+        else:
+            self.print_new_equation_to_file(row)
         self.table.insert(self.rows - 1, row.copy())
         new_basis_index = Gomori.get_basis_index(self.columns_caption[self.columns - 2]) + 1
         self.rows_caption.insert(self.rows - 1, 'x' + str(new_basis_index))
@@ -82,13 +99,23 @@ class Gomori(SimplexTable):
                 index = i
         return index
 
-    def iterate(self):
+    def iterate(self, is_to_console=True):
         row = self.find_row()
-        self.add_basis(row)
-        self.print()
+        self.add_basis(row, is_to_console)
+        if is_to_console:
+            self.print()
+        else:
+            file = open('answer.txt', 'a')
+            tmp_table = self.get_table_to_print()
+            for row in tmp_table:
+                for element in row:
+                    file.write('{:>6} '.format(element))
+                file.write('\n')
+            file.close()
         column = self.find_column()
-        print('Element: {} ({}, {})'.format(str(self.table[self.rows - 2][column]), self.rows - 1, column + 1))
+        element = 'Element: {} ({}, {})'.format(str(self.table[self.rows - 2][column]), self.rows - 1, column + 1)
         self.recalculate(self.rows - 2, column)
+        return element
 
     def get_function_answer(self):
         return -self.table[self.rows - 1][self.columns - 1]

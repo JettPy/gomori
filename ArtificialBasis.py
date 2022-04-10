@@ -128,10 +128,11 @@ class ArtificialBasis(SimplexTable):
     def iterate(self):
         column = self.find_column()
         row = self.find_row(column)
-        print('Element: {} ({}, {})'.format(str(self.table[row][column]), row + 1, column + 1))
+        element = 'Element: {} ({}, {})'.format(str(self.table[row][column]), row + 1, column + 1)
         if self.is_first_stage:
             column = self.resize(row, column)
         self.recalculate(row, column)
+        return element
 
     def get_data(self):
         return self.table, self.rows_caption, self.columns_caption, self.is_maximize
