@@ -21,31 +21,31 @@ class ArtificialBasis(SimplexTable):
             if signs[i] == '>=':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(-1))
+                        table[j].insert(pos, -1)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                         artificial_basis_indexes.append(pos)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             elif signs[i] == '==':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                         artificial_basis_indexes.append(pos)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             elif signs[i] == '<=':
                 for j in range(len(table)):
                     if i == j:
-                        table[j].insert(pos, Fraction(1))
+                        table[j].insert(pos, 1)
                     else:
-                        table[j].insert(pos, Fraction(0))
+                        table[j].insert(pos, 0)
                 pos += 1
             else:
                 raise Exception("Invalid sign")

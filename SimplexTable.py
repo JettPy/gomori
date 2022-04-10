@@ -38,10 +38,6 @@ class SimplexTable(ABC):
     def can_be_iterated(self):
         pass
 
-    @abstractmethod
-    def iterate(self):
-        pass
-
     def print(self):
         for caption in ([''] + self.columns_caption):
             print('{:>6}'.format(caption), end=' ')

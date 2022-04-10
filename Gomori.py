@@ -37,42 +37,25 @@ class Gomori(SimplexTable):
         return index
 
     @private
-    def print_new_equation(self, q: list):
-        print('Added new equation: {}'.format(-q[len(q) - 1]), end='')
+    def new_equation(self, q: list):
+        equation = 'Added new equation: {}'.format(-q[len(q) - 1])
         for i in range(len(q) - 1):
             if q[i] == -1:
-                print('-x{}'.format(i + 1), end='')
+                equation += '-x{}'.format(i + 1)
             elif q[i] == 0:
                 continue
             else:
-                print('{}x{}'.format(q[i], i + 1), end='')
-        print('<=0')
+                equation += '{}x{}'.format(q[i], i + 1)
+        equation += '<=0'
+        return equation
 
     @private
-    def print_new_equation_to_file(self, q: list):
-        file = open('answer.txt', 'a')
-        file.write('Added new equation: {}'.format(-q[len(q) - 1]))
-        for i in range(len(q) - 1):
-            if q[i] == -1:
-                file.write('-x{}'.format(i + 1))
-            elif q[i] == 0:
-                continue
-            else:
-                file.write('{}x{}'.format(q[i], i + 1))
-        file.write('<=0\n')
-        file.close()
-
-    @private
-    def add_basis(self, index_from: int, is_to_console=True):
+    def add_basis(self, index_from: int):
         row = []
         for i in range(self.columns):
             element = self.table[index_from][i]
             q = element - math.floor(element)
             row.append(-q)
-        if is_to_console:
-            self.print_new_equation(row)
-        else:
-            self.print_new_equation_to_file(row)
         self.table.insert(self.rows - 1, row.copy())
         new_basis_index = Gomori.get_basis_index(self.columns_caption[self.columns - 2]) + 1
         self.rows_caption.insert(self.rows - 1, 'x' + str(new_basis_index))
@@ -84,6 +67,7 @@ class Gomori(SimplexTable):
                 self.table[i].insert(self.columns - 1, Fraction(0))
         self.columns_caption.insert(self.columns - 1, 'x' + str(new_basis_index))
         self.columns += 1
+        return self.new_equation(row)
 
     @private
     def find_column(self):
@@ -99,19 +83,11 @@ class Gomori(SimplexTable):
                 index = i
         return index
 
-    def iterate(self, is_to_console=True):
+    def iterate_first(self):
         row = self.find_row()
-        self.add_basis(row, is_to_console)
-        if is_to_console:
-            self.print()
-        else:
-            file = open('answer.txt', 'a')
-            tmp_table = self.get_table_to_print()
-            for row in tmp_table:
-                for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
-            file.close()
+        return self.add_basis(row)
+
+    def iterate_last(self):
         column = self.find_column()
         element = 'Element: {} ({}, {})'.format(str(self.table[self.rows - 2][column]), self.rows - 1, column + 1)
         self.recalculate(self.rows - 2, column)

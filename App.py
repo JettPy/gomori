@@ -1,6 +1,5 @@
 from accessify import private
 from ArtificialBasis import ArtificialBasis
-from DualTask import DualTask
 from Gomori import Gomori
 
 
@@ -150,79 +149,77 @@ class App:
             return False
         return True
 
-    def print_to_console(self):
-        print('Your enter:')
+    def print_enter(self, file=None):
+        print('Your enter:', file=file)
         for i in range(self.equations_count):
             for j in range(self.variables_count):
                 if j == 0 or self.matrix_a[i][j] < 0:
                     if self.matrix_a[i][j] == -1:
-                        print('-x{}'.format(j + 1), end='')
+                        print('-x{}'.format(j + 1), file=file, end='')
                     elif self.matrix_a[i][j] == 1:
-                        print('x{}'.format(j + 1), end='')
+                        print('x{}'.format(j + 1), file=file, end='')
                     else:
-                        print('{}x{}'.format(self.matrix_a[i][j], j + 1), end='')
+                        print('{}x{}'.format(self.matrix_a[i][j], j + 1), file=file, end='')
                 else:
                     if self.matrix_a[i][j] == 1:
-                        print('+x{}'.format(j + 1), end='')
+                        print('+x{}'.format(j + 1), file=file, end='')
                     else:
-                        print('+{}x{}'.format(self.matrix_a[i][j], j + 1), end='')
-            print('{}{}'.format(self.signs[i], self.matrix_b[i]))
-        print('Z(x)=', end='')
+                        print('+{}x{}'.format(self.matrix_a[i][j], j + 1), file=file, end='')
+            print('{}{}'.format(self.signs[i], self.matrix_b[i]), file=file)
+        print('Z(x)=', file=file, end='')
         for i in range(self.variables_count):
             if i == 0 or self.matrix_c[i] < 0:
                 if self.matrix_c[i] == -1:
-                    print('-x{}'.format(i + 1), end='')
+                    print('-x{}'.format(i + 1), file=file, end='')
                 elif self.matrix_c[i] == 1:
-                    print('x{}'.format(i + 1), end='')
+                    print('x{}'.format(i + 1), file=file, end='')
                 else:
-                    print('{}x{}'.format(self.matrix_c[i], i + 1), end='')
+                    print('{}x{}'.format(self.matrix_c[i], i + 1), file=file, end='')
             else:
                 if self.matrix_c[i] == 1:
-                    print('+x{}'.format(i + 1), end='')
+                    print('+x{}'.format(i + 1), file=file, end='')
                 else:
-                    print('+{}x{}'.format(self.matrix_c[i], i + 1), end='')
+                    print('+{}x{}'.format(self.matrix_c[i], i + 1), file=file, end='')
         if self.is_maximize:
-            print(' -> max')
+            print(' -> max', file=file)
         else:
-            print(' -> min')
+            print(' -> min', file=file)
 
-    def print_to_file(self):
-        file = open('answer.txt', 'w')
-        file.write('Your enter:' + '\n')
-        for i in range(self.equations_count):
-            for j in range(self.variables_count):
+    def print_dual_system(self, file=None):
+        print('Dual system:', file=file)
+        for i in range(len(self.matrix_a)):
+            for j in range(len(self.matrix_b)):
                 if j == 0 or self.matrix_a[i][j] < 0:
                     if self.matrix_a[i][j] == -1:
-                        file.write('-x{}'.format(j + 1))
+                        print('-y{}'.format(j + 1), file=file, end='')
                     elif self.matrix_a[i][j] == 1:
-                        file.write('x{}'.format(j + 1))
+                        print('y{}'.format(j + 1), file=file, end='')
                     else:
-                        file.write('{}x{}'.format(self.matrix_a[i][j], j + 1))
+                        print('{}y{}'.format(self.matrix_a[i][j], j + 1), file=file, end='')
                 else:
                     if self.matrix_a[i][j] == 1:
-                        file.write('+x{}'.format(j + 1))
+                        print('+y{}'.format(j + 1), file=file, end='')
                     else:
-                        file.write('+{}x{}'.format(self.matrix_a[i][j], j + 1))
-            file.write('{}{}'.format(self.signs[i], self.matrix_b[i]) + '\n')
-        file.write('Z(x)=')
-        for i in range(self.variables_count):
+                        print('+{}y{}'.format(self.matrix_a[i][j], j + 1), file=file, end='')
+            print('{}{}'.format(self.signs[i], self.matrix_b[i]), file=file)
+        print('Z(y)=', file=file, end='')
+        for i in range(len(self.matrix_b)):
             if i == 0 or self.matrix_c[i] < 0:
                 if self.matrix_c[i] == -1:
-                    file.write('-x{}'.format(i + 1))
+                    print('-y{}'.format(i + 1), file=file, end='')
                 elif self.matrix_c[i] == 1:
-                    file.write('x{}'.format(i + 1))
+                    print('y{}'.format(i + 1), file=file, end='')
                 else:
-                    file.write('{}x{}'.format(self.matrix_c[i], i + 1))
+                    print('{}y{}'.format(self.matrix_c[i], i + 1), file=file, end='')
             else:
                 if self.matrix_c[i] == 1:
-                    file.write('+x{}'.format(i + 1))
+                    print('+y{}'.format(i + 1), file=file, end='')
                 else:
-                    file.write('+{}x{}'.format(self.matrix_c[i], i + 1))
+                    print('+{}y{}'.format(self.matrix_c[i], i + 1), file=file, end='')
         if self.is_maximize:
-            file.write(' -> max\n')
+            print(' -> max', file=file)
         else:
-            file.write(' -> min\n')
-        file.close()
+            print(' -> min', file=file)
 
     @private
     def transform_to_positive_b(self):
@@ -248,285 +245,165 @@ class App:
                 elif self.signs[i] == '<=':
                     self.signs[i] = '>='
 
-    def do_artificial_basis(self, is_to_console: bool):
+    @private
+    def transpose_data(self):
+        matrix_a_t = []
+        for i in range(len(self.matrix_a[0])):
+            row_a = []
+            for j in range(len(self.matrix_a)):
+                row_a.append(self.matrix_a[j][i])
+            matrix_a_t.append(row_a.copy())
+            row_a.clear()
+        dual_signs = []
+        for i in range(len(self.matrix_c)):
+            if not self.is_maximize:
+                dual_signs.append('<=')
+            else:
+                dual_signs.append('>=')
+        return matrix_a_t, dual_signs
+
+    def do_artificial_basis(self, file=None):
+        self.print_enter(file)
         self.transform_to_positive_b()
-        file = None
-        if not is_to_console:
-            file = open('answer.txt', 'a')
         table = ArtificialBasis(self.matrix_a, self.matrix_b, self.matrix_c, self.signs, self.is_maximize)
-        if is_to_console:
-            print('Initial:')
-            table.print()
-        else:
-            file.write('Initial:\n')
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
-                for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
+        print('Initial:', file=file)
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
         count = 1
         while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
-            count += 1
-        if is_to_console:
-            print('Drop G:')
-        else:
-            file.write('Drop G:\n')
-        table.drop_artificial_function()
-        if is_to_console:
-            table.print()
-        else:
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
                 for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
-        while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
             count += 1
-        if is_to_console:
-            print('X vector:')
-            for element in table.get_vector_answer():
-                print('{:>6}'.format(str(element)), end=' ')
-            print()
-            if self.is_maximize:
-                print('Max Z: {}'.format(str(table.get_function_answer())))
-            else:
-                print('Min Z: {}'.format(str(table.get_function_answer())))
+        print('Drop G:', file=file)
+        table.drop_artificial_function()
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
+        while table.can_be_iterated():
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
+            count += 1
+        print('X vector:', file=file)
+        for element in table.get_vector_answer():
+            print('{:>6}'.format(str(element)), file=file, end=' ')
+        print(file=file)
+        if self.is_maximize:
+            print('Max Z: {}'.format(str(table.get_function_answer())), file=file)
         else:
-            file.write('X vector:\n')
-            for element in table.get_vector_answer():
-                file.write('{:>6} '.format(str(element)))
-            file.write('\n')
-            if self.is_maximize:
-                file.write('Max Z: {}\n'.format(str(table.get_function_answer())))
-            else:
-                file.write('Min Z: {}\n'.format(str(table.get_function_answer())))
-        if not is_to_console:
-            file.close()
+            print('Min Z: {}'.format(str(table.get_function_answer())), file=file)
 
-    def do_dual_task(self, is_to_console: bool):
+    def do_dual_task(self, file=None):
+        self.print_enter(file)
         self.transform_for_dual_task()
-        file = None
-        table = None
-        if is_to_console:
-            table = DualTask(self.matrix_a, self.matrix_b, self.matrix_c, self.is_maximize)
-            print('Initial:')
-            table.print()
-        else:
-            table = DualTask(self.matrix_a, self.matrix_b, self.matrix_c, self.is_maximize, False)
-            file = open('answer.txt', 'a')
-            file.write('Initial:\n')
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
-                for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
-        count = 1
-        while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
-            count += 1
-        if is_to_console:
-            print('Drop G:')
-        else:
-            file.write('Drop G:\n')
-        table.drop_artificial_function()
-        if is_to_console:
-            table.print()
-        else:
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
-                for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
-        while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
-            count += 1
-        if is_to_console:
-            print('Y vector:')
-            for element in table.get_vector_answer():
-                print('{:>6}'.format(str(element)), end=' ')
-            print()
-            if self.is_maximize:
-                print('Max Z: {}'.format(str(table.get_function_answer())))
-            else:
-                print('Min Z: {}'.format(str(table.get_function_answer())))
-        else:
-            file.write('Y vector:\n')
-            for element in table.get_vector_answer():
-                file.write('{:>6} '.format(str(element)))
-            file.write('\n')
-            if self.is_maximize:
-                file.write('Max Z: {}\n'.format(str(table.get_function_answer())))
-            else:
-                file.write('Min Z: {}\n'.format(str(table.get_function_answer())))
-        if not is_to_console:
-            file.close()
-
-    def do_gomori(self, is_to_console: bool):
+        matrix_a_t, dual_signs = self.transpose_data()
+        self.matrix_a = matrix_a_t
+        self.matrix_b, self.matrix_c = self.matrix_c, self.matrix_b
+        self.signs = dual_signs
+        self.is_maximize = not self.is_maximize
+        self.print_dual_system(file)
         self.transform_to_positive_b()
-        file = None
-        if not is_to_console:
-            file = open('answer.txt', 'a')
-        table = ArtificialBasis(self.matrix_a, self.matrix_b, self.matrix_c, self.signs, self.is_maximize)
-        if is_to_console:
-            print('Initial:')
-            table.print()
-        else:
-            file.write('Initial:\n')
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
-                for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
+        table = ArtificialBasis(self.matrix_a, self.matrix_b, self.matrix_c, self.signs, self.is_maximize, 'y')
+        print('Initial:', file=file)
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
         count = 1
         while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
-            count += 1
-        if is_to_console:
-            print('Drop G:')
-        else:
-            file.write('Drop G:\n')
-        table.drop_artificial_function()
-        if is_to_console:
-            table.print()
-        else:
-            tmp_table = table.get_table_to_print()
-            for row in tmp_table:
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
                 for element in row:
-                    file.write('{:>6} '.format(element))
-                file.write('\n')
-        while table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            element = table.iterate()
-            if is_to_console:
-                print(element)
-                table.print()
-            else:
-                file.write(element + '\n')
-                tmp_table = table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
             count += 1
-        if is_to_console:
-            print('Using Gomori method:')
+        print('Drop G:', file=file)
+        table.drop_artificial_function()
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
+        while table.can_be_iterated():
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
+            count += 1
+        print('Y vector:', file=file)
+        for element in table.get_vector_answer():
+            print('{:>6}'.format(str(element)), file=file, end=' ')
+        print(file=file)
+        if self.is_maximize:
+            print('Max Z: {}'.format(str(table.get_function_answer())), file=file)
         else:
-            file.write('Using Gomori method:\n')
+            print('Min Z: {}'.format(str(table.get_function_answer())), file=file)
+
+    def do_gomori(self, file=None):
+        self.print_enter(file)
+        self.transform_to_positive_b()
+        table = ArtificialBasis(self.matrix_a, self.matrix_b, self.matrix_c, self.signs, self.is_maximize)
+        print('Initial:', file=file)
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
+        count = 1
+        while table.can_be_iterated():
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
+            count += 1
+        print('Drop G:', file=file)
+        table.drop_artificial_function()
+        for row in table.get_table_to_print():
+            for element in row:
+                print('{:>6}'.format(element), file=file, end=' ')
+            print(file=file)
+        while table.can_be_iterated():
+            print('Step {}:'.format(count), file=file)
+            print(table.iterate(), file=file)
+            for row in table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
+            count += 1
+        print('Using Gomori method:', file=file)
         table_data, rows_data, columns_data, task = table.get_data()
         gomori_table = Gomori(table_data, rows_data, columns_data, task)
         while gomori_table.can_be_iterated():
-            if is_to_console:
-                print('Step {}:'.format(count))
-            else:
-                file.write('Step {}:\n'.format(count))
-            if is_to_console:
-                element = gomori_table.iterate()
-                print(element)
-                gomori_table.print()
-            else:
-                file.close()
-                element = gomori_table.iterate(False)
-                file = open('answer.txt', 'a')
-                file.write(element + '\n')
-                tmp_table = gomori_table.get_table_to_print()
-                for row in tmp_table:
-                    for element in row:
-                        file.write('{:>6} '.format(element))
-                    file.write('\n')
+            print('Step {}:'.format(count), file=file)
+            print(gomori_table.iterate_first(), file=file)
+            for row in gomori_table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
+            print(gomori_table.iterate_last(), file=file)
+            for row in gomori_table.get_table_to_print():
+                for element in row:
+                    print('{:>6}'.format(element), file=file, end=' ')
+                print(file=file)
             count += 1
-        if is_to_console:
-            print('X vector:')
-            for element in gomori_table.get_vector_answer():
-                print('{:>6}'.format(str(element)), end=' ')
-            print()
-            if self.is_maximize:
-                print('Max Z: {}'.format(str(gomori_table.get_function_answer())))
-            else:
-                print('Min Z: {}'.format(str(gomori_table.get_function_answer())))
+        print('X vector:', file=file)
+        for element in gomori_table.get_vector_answer():
+            print('{:>6}'.format(str(element)), file=file, end=' ')
+        print(file=file)
+        if self.is_maximize:
+            print('Max Z: {}'.format(str(gomori_table.get_function_answer())), file=file)
         else:
-            file.write('X vector:\n')
-            for element in gomori_table.get_vector_answer():
-                file.write('{:>6} '.format(str(element)))
-            file.write('\n')
-            if self.is_maximize:
-                file.write('Max Z: {}\n'.format(str(gomori_table.get_function_answer())))
-            else:
-                file.write('Min Z: {}\n'.format(str(gomori_table.get_function_answer())))
-        if not is_to_console:
-            file.close()
-
+            print('Min Z: {}'.format(str(gomori_table.get_function_answer())), file=file)
