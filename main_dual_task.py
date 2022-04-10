@@ -63,17 +63,17 @@ while k <= equations_count:
         continue
     k += 1
 while True:
-    print('Enter {} coefficients for object function:'.format(variables_count))
+    print('Enter {} coefficients for object function:'.format(variables_count + 1))
     buffer = input()
     equation = buffer.split()
-    if len(equation) < variables_count:
+    if len(equation) < variables_count + 1:
         print('Too few arguments')
         continue
-    elif len(equation) > variables_count:
+    elif len(equation) > variables_count + 1:
         print('Too many arguments')
         continue
     try:
-        for i in range(variables_count):
+        for i in range(variables_count + 1):
             c = int(equation[i])
             matrix_c.append(c)
     except ValueError:

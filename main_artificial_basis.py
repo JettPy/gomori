@@ -73,7 +73,7 @@ while True:
         print('Too many arguments')
         continue
     try:
-        for i in range(variables_count):
+        for i in range(variables_count + 1):
             c = int(equation[i])
             matrix_c.append(c)
     except ValueError:
