@@ -75,13 +75,13 @@ class App:
                 continue
             k += 1
         while True:
-            print('Enter {} coefficients for object function:'.format(self.variables_count))
+            print('Enter {} coefficients (1 for constant) for object function:'.format(self.variables_count + 1))
             buffer = input()
             equation = buffer.split()
-            if len(equation) < self.variables_count:
+            if len(equation) < self.variables_count + 1:
                 print('Too few arguments')
                 continue
-            elif len(equation) > self.variables_count:
+            elif len(equation) > self.variables_count + 1:
                 print('Too many arguments')
                 continue
             try:
