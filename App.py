@@ -104,9 +104,8 @@ class App:
                 self.is_maximize = False
             break
 
-    def enter_from_message(self, message: str):
+    def enter_from_message(self, buffer: str):
         try:
-            buffer = message.split('\n')
             self.variables_count = int(buffer[0])
             if self.variables_count < 1:
                 raise ValueError
@@ -274,7 +273,10 @@ class App:
         count = 1
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')
@@ -288,7 +290,10 @@ class App:
             print(file=file)
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')
@@ -322,7 +327,10 @@ class App:
         count = 1
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')
@@ -336,7 +344,10 @@ class App:
             print(file=file)
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')
@@ -363,7 +374,10 @@ class App:
         count = 1
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')
@@ -377,7 +391,10 @@ class App:
             print(file=file)
         while table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(table.iterate(), file=file)
+            comment = table.iterate()
+            print(comment, file=file)
+            if comment == 'No solution':
+                return
             for row in table.get_table_to_print():
                 for element in row:
                     print('{:>6}'.format(element), file=file, end=' ')

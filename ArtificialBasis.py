@@ -15,7 +15,7 @@ class ArtificialBasis(SimplexTable):
         table.append(matrix_c.copy() + [0])
         for i in range(len(table[0])):
             table[len(table) - 1][i] = -table[len(table) - 1][i]
-        pos = len(matrix_a)
+        pos = len(matrix_c)
         artificial_basis_indexes = []
         for i in range(len(signs)):
             if signs[i] == '>=':
@@ -127,7 +127,11 @@ class ArtificialBasis(SimplexTable):
 
     def iterate(self):
         column = self.find_column()
+        if column < 0:
+            return 'No solution'
         row = self.find_row(column)
+        if row < 0:
+            return 'No solution'
         element = 'Element: {} ({}, {})'.format(str(self.table[row][column]), row + 1, column + 1)
         if self.is_first_stage:
             column = self.resize(row, column)
