@@ -25,7 +25,9 @@ class SimplexTable(ABC):
                 elif i != row and j == column:
                     new_table[i][j] = Fraction(0)
                 elif i == row and j != column:
-                    new_table[i][j] = Fraction(self.table[i][j] / self.table[row][column]).limit_denominator(max_denominator=1000)
+                    a1 = self.table[i][j]
+                    a2 = self.table[row][column]
+                    new_table[i][j] = Fraction(a1 / a2).limit_denominator(max_denominator=1000)
                 else:
                     a11 = self.table[i][j]
                     a12 = self.table[row][j]

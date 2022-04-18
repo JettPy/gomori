@@ -187,7 +187,7 @@ class App:
     def print_dual_system(self, file=None):
         print('Dual system:', file=file)
         for i in range(len(self.matrix_a)):
-            for j in range(len(self.matrix_b)):
+            for j in range(len(self.matrix_a[0])):
                 if j == 0 or self.matrix_a[i][j] < 0:
                     if self.matrix_a[i][j] == -1:
                         print('-y{}'.format(j + 1), file=file, end='')
@@ -202,7 +202,7 @@ class App:
                         print('+{}y{}'.format(self.matrix_a[i][j], j + 1), file=file, end='')
             print('{}{}'.format(self.signs[i], self.matrix_b[i]), file=file)
         print('Z(y)=', file=file, end='')
-        for i in range(len(self.matrix_b)):
+        for i in range(len(self.matrix_c)):
             if i == 0 or self.matrix_c[i] < 0:
                 if self.matrix_c[i] == -1:
                     print('-y{}'.format(i + 1), file=file, end='')
@@ -222,9 +222,9 @@ class App:
 
     @private
     def transform_to_positive_b(self):
-        for i in range(self.equations_count):
+        for i in range(len(self.matrix_a)):
             if self.matrix_b[i] < 0:
-                for j in range(self.variables_count):
+                for j in range(len(self.matrix_c)):
                     self.matrix_a[i][j] = -self.matrix_a[i][j]
                 self.matrix_b[i] = -self.matrix_b[i]
                 if self.signs[i] == '>=':
@@ -318,6 +318,7 @@ class App:
         self.is_maximize = not self.is_maximize
         self.print_dual_system(file)
         self.transform_to_positive_b()
+        self.print_dual_system(file)
         table = ArtificialBasis(self.matrix_a, self.matrix_b, self.matrix_c, self.signs, self.is_maximize, 'y')
         print('Initial:', file=file)
         for row in table.get_table_to_print():
@@ -405,11 +406,12 @@ class App:
         gomori_table = Gomori(table_data, rows_data, columns_data, task)
         while gomori_table.can_be_iterated():
             print('Step {}:'.format(count), file=file)
-            print(gomori_table.iterate_first(), file=file)
-            for row in gomori_table.get_table_to_print():
-                for element in row:
-                    print('{:>6}'.format(element), file=file, end=' ')
-                print(file=file)
+            if not gomori_table.last_iteration():
+                print(gomori_table.iterate_first(), file=file)
+                for row in gomori_table.get_table_to_print():
+                    for element in row:
+                        print('{:>6}'.format(element), file=file, end=' ')
+                    print(file=file)
             print(gomori_table.iterate_last(), file=file)
             for row in gomori_table.get_table_to_print():
                 for element in row:
